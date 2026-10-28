@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10111a">
+  <title>Web Media</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      background: #10111a;
+      color: #f5f5fa;
+      font-family: Arial, sans-serif;
+    }
+    main { max-width: 760px; margin: auto; }
+    h1 { color: #9d8cff; }
+    input, button {
+      padding: 13px;
+      border-radius: 10px;
+      border: 1px solid #45465c;
+      font-size: 16px;
+    }
+    input {
+      width: 100%;
+      margin: 10px 0;
+      background: #202131;
+      color: white;
+    }
+    button {
+      background: #7965ed;
+      color: white;
+      cursor: pointer;
+    }
+    .card {
+      background: #202131;
+      padding: 16px;
+      margin-top: 12px;
+      border-radius: 12px;
+      overflow-wrap: anywhere;
+    }
+    a { color: #b9acff; }
+    .muted { color: #b6b7c8; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Web Media</h1>
+  <p class="muted">Le tue fonti multimediali, in un unico posto.</p>
+
+  <h2>Aggiungi un sito</h2>
+  <input id="name" placeholder="Nome del sito">
+  <input id="url" placeholder="Indirizzo, es. https://example.com">
+  <button id="add">Aggiungi fonte</button>
+
+  <h2>Le mie fonti</h2>
+  <input id="search" placeholder="Cerca tra i siti salvati">
+  <div id="sources"></div>
+</main>
+
+<script>
+  const key = "web-media-sources";
+  let sources = [];
+  try {
+    sources = JSON.parse(localStorage.getItem(key) || "[]");
+    if (!Array.isArray(sources)) sources = [];
+  } catch {
+    sources = [];
+  }
+
+  const nameInput = document.getElementById("name");
+  const urlInput = document.getElementById("url");
+  const searchInput = document.getElementById("search");
+  const container = document.getElementById("sources");
+
+  function render() {
+    container.replaceChildren();
+    const term = searchInput.value.toLowerCase();
+
+    sources.filter(s =>
+      (s.name + " " + s.url).toLowerCase().includes(term)
+    ).forEach((s, index) => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const title = document.createElement("strong");
+      title.textContent = s.name;
+
+      const link = document.createElement("p");
+      const a = document.createElement("a");
+      a.href = s.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = "Apri sito";
+      link.append(a);
+
+      const remove = document.createElement("button");
+      remove.textContent = "Elimina";
+      remove.onclick = () => {
+        sources.splice(index, 1);
+        save();
+      };
+
+      card.append(title, link, remove);
+      container.append(card);
+    });
+
+    if (!container.children.length) {
+      container.textContent = "Nessuna fonte trovata.";
+    }
+  }
+
+  function save() {
+    localStorage.setItem(key, JSON.stringify(sources));
+    render();
+  }
+
+  document.getElementById("add").onclick = () => {
+    const name = nameInput.value.trim();
+    let url;
+
+    try {
+      url = new URL(urlInput.value.trim());
+    } catch {
+      alert("Inserisci un indirizzo web valido.");
+      return;
+    }
+
+    if (!name || !["https:", "http:"].includes(url.protocol)) {
+      alert("Inserisci un nome e un indirizzo HTTP o HTTPS valido.");
+      return;
+    }
+
+    sources.push({ name, url: url.href });
+    nameInput.value = "";
+    urlInput.value = "";
+    save();
+  };
+
+  searchInput.addEventListener("input", render);
+  render();
+</script>
+</body>
+</html>
