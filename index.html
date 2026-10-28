@@ -4,143 +4,478 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10111a">
+  <meta name="theme-color" content="#10121b">
   <title>Web Media</title>
   <style>
+    :root {
+      color-scheme: dark;
+      --bg: #10121b;
+      --panel: #1b1e2b;
+      --panel2: #24283a;
+      --text: #f5f6ff;
+      --muted: #a5abc2;
+      --accent: #8b7cff;
+      --border: #343950;
+    }
+
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      padding: 24px;
-      background: #10111a;
-      color: #f5f5fa;
-      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
     }
-    main { max-width: 760px; margin: auto; }
-    h1 { color: #9d8cff; }
-    input, button {
-      padding: 13px;
-      border-radius: 10px;
-      border: 1px solid #45465c;
+
+    header {
+      padding: 28px 18px 22px;
+      background: linear-gradient(135deg, #252345, #151827 75%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .wrap { max-width: 900px; margin: auto; }
+
+    .brand {
+      color: #b7adff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    h1 { margin: 5px 0; font-size: clamp(30px, 7vw, 44px); }
+    h2 { font-size: 21px; margin: 0 0 14px; }
+    h3 { font-size: 16px; margin: 0 0 5px; }
+    p { margin: 6px 0; }
+    .muted { color: var(--muted); font-size: 14px; }
+
+    main {
+      width: min(100% - 28px, 850px);
+      margin: 22px auto 50px;
+    }
+
+    section {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 19px;
+      margin-bottom: 18px;
+    }
+
+    .searchbox {
+      display: flex;
+      gap: 9px;
+      margin: 16px 0;
+    }
+
+    input {
+      min-width: 0;
+      width: 100%;
+      padding: 13px 14px;
+      color: var(--text);
+      background: #111421;
+      border: 1px solid #414761;
+      border-radius: 11px;
       font-size: 16px;
     }
-    input {
-      width: 100%;
-      margin: 10px 0;
-      background: #202131;
-      color: white;
+
+    input:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
     }
-    button {
-      background: #7965ed;
+
+    button, .action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 10px;
+      padding: 11px 14px;
+      background: var(--accent);
       color: white;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
       cursor: pointer;
     }
-    .card {
-      background: #202131;
-      padding: 16px;
-      margin-top: 12px;
-      border-radius: 12px;
+
+    button.secondary, .action.secondary {
+      background: var(--panel2);
+      border: 1px solid var(--border);
+    }
+
+    button.danger { color: #ffb8c0; }
+    button:active, .action:active { transform: scale(.98); }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .tabs button { flex: 1 1 120px; }
+    .tabs button.active { background: #5f51c8; }
+
+    .results, .saved-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      gap: 11px;
+      margin-top: 14px;
+    }
+
+    .result, .site {
+      min-width: 0;
+      padding: 14px;
+      background: #151827;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+    }
+
+    .result p, .site p {
       overflow-wrap: anywhere;
     }
-    a { color: #b9acff; }
-    .muted { color: #b6b7c8; }
+
+    .result .action { margin-top: 12px; width: 100%; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr auto;
+      gap: 9px;
+      align-items: center;
+    }
+
+    .site-url {
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+      margin: 8px 0;
+    }
+
+    .site-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+    .empty {
+      color: var(--muted);
+      padding: 15px 0;
+      font-size: 14px;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      padding: 8px 15px 28px;
+    }
+
+    @media (max-width: 580px) {
+      .searchbox { flex-direction: column; }
+      .searchbox button { width: 100%; }
+      .form-grid { grid-template-columns: 1fr; }
+      section { padding: 15px; }
+    }
   </style>
 </head>
 <body>
-<main>
-  <h1>Web Media</h1>
-  <p class="muted">Le tue fonti multimediali, in un unico posto.</p>
+  <header>
+    <div class="wrap">
+      <div class="brand">Il tuo spazio multimediale</div>
+      <h1>Web Media</h1>
+      <p class="muted">Cerca, scopri e organizza i tuoi contenuti sul web.</p>
+    </div>
+  </header>
 
-  <h2>Aggiungi un sito</h2>
-  <input id="name" placeholder="Nome del sito">
-  <input id="url" placeholder="Indirizzo, es. https://example.com">
-  <button id="add">Aggiungi fonte</button>
+  <main>
+    <section>
+      <h2>🔎 Cerca contenuti</h2>
+      <p class="muted">Inserisci un titolo, un film, una serie o un argomento.</p>
 
-  <h2>Le mie fonti</h2>
-  <input id="search" placeholder="Cerca tra i siti salvati">
-  <div id="sources"></div>
-</main>
+      <form id="searchForm">
+        <div class="searchbox">
+          <input id="query" type="search"
+            placeholder="Es. Interstellar, documentari, musica..."
+            aria-label="Cosa vuoi cercare?" required>
+          <button type="submit">Cerca</button>
+        </div>
+      </form>
 
-<script>
-  const key = "web-media-sources";
-  let sources = [];
-  try {
-    sources = JSON.parse(localStorage.getItem(key) || "[]");
-    if (!Array.isArray(sources)) sources = [];
-  } catch {
-    sources = [];
-  }
+      <div class="tabs" aria-label="Tipo di ricerca">
+        <button type="button" class="active" data-mode="all">Tutto</button>
+        <button type="button" class="secondary" data-mode="films">Film e serie</button>
+        <button type="button" class="secondary" data-mode="video">Video</button>
+        <button type="button" class="secondary" data-mode="web">Web</button>
+      </div>
 
-  const nameInput = document.getElementById("name");
-  const urlInput = document.getElementById("url");
-  const searchInput = document.getElementById("search");
-  const container = document.getElementById("sources");
+      <p id="searchStatus" class="muted">Scegli una categoria e inserisci una ricerca.</p>
+      <div id="results" class="results"></div>
+    </section>
 
-  function render() {
-    container.replaceChildren();
-    const term = searchInput.value.toLowerCase();
+    <section>
+      <h2>🌐 I miei siti</h2>
+      <p class="muted">Salva i siti che usi più spesso per ritrovarli rapidamente.</p>
 
-    sources.filter(s =>
-      (s.name + " " + s.url).toLowerCase().includes(term)
-    ).forEach((s, index) => {
-      const card = document.createElement("div");
-      card.className = "card";
+      <form id="siteForm">
+        <div class="form-grid">
+          <input id="siteName" type="text" placeholder="Nome del sito" required>
+          <input id="siteUrl" type="url" placeholder="https://esempio.com" required>
+          <button type="submit">Aggiungi</button>
+        </div>
+      </form>
 
-      const title = document.createElement("strong");
-      title.textContent = s.name;
+      <div id="savedSites" class="saved-list"></div>
+      <p id="siteStatus" class="muted"></p>
+    </section>
 
-      const link = document.createElement("p");
-      const a = document.createElement("a");
-      a.href = s.url;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.textContent = "Apri sito";
-      link.append(a);
+    <section>
+      <h2>💡 Come funziona</h2>
+      <p class="muted">
+        Web Media apre le ricerche su servizi esterni. I risultati, la disponibilità
+        dei contenuti e le eventuali restrizioni dipendono dai singoli siti.
+        Non è un servizio di streaming e non ospita film o video.
+      </p>
+    </section>
+  </main>
 
-      const remove = document.createElement("button");
-      remove.textContent = "Elimina";
-      remove.onclick = () => {
-        sources.splice(index, 1);
-        save();
-      };
+  <footer>Web Media · La tua porta d'accesso al web</footer>
 
-      card.append(title, link, remove);
-      container.append(card);
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    let mode = "all";
+    let lastQuery = "";
+
+    const searchTargets = {
+      all: [
+        {
+          name: "Google",
+          description: "Cerca pagine, titoli e contenuti sul web.",
+          url: q => "https://www.google.com/search?q=" + encodeURIComponent(q)
+        },
+        {
+          name: "YouTube",
+          description: "Cerca video, trailer e contenuti multimediali.",
+          url: q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q)
+        },
+        {
+          name: "DuckDuckGo",
+          description: "Un'altra opzione per cercare sul web.",
+          url: q => "https://duckduckgo.com/?q=" + encodeURIComponent(q)
+        }
+      ],
+      films: [
+        {
+          name: "Film e serie su Google",
+          description: "Cerca titoli, recensioni e pagine dedicate a film e serie.",
+          url: q => "https://www.google.com/search?q=" + encodeURIComponent(q + " film serie TV")
+        },
+        {
+          name: "IMDb",
+          description: "Cerca schede, cast e informazioni sui titoli.",
+          url: q => "https://www.imdb.com/find/?q=" + encodeURIComponent(q)
+        },
+        {
+          name: "JustWatch",
+          description: "Controlla dove un titolo potrebbe essere disponibile in streaming.",
+          url: q => "https://www.justwatch.com/it/ricerca?q=" + encodeURIComponent(q)
+        }
+      ],
+      video: [
+        {
+          name: "YouTube",
+          description: "Cerca video, trailer, documentari e altro.",
+          url: q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q)
+        },
+        {
+          name: "Vimeo",
+          description: "Cerca video e produzioni indipendenti.",
+          url: q => "https://vimeo.com/search?q=" + encodeURIComponent(q)
+        },
+        {
+          name: "Video su Google",
+          description: "Trova video indicizzati da Google.",
+          url: q => "https://www.google.com/search?tbm=vid&q=" + encodeURIComponent(q)
+        }
+      ],
+      web: [
+        {
+          name: "Google",
+          description: "Cerca pagine web e siti.",
+          url: q => "https://www.google.com/search?q=" + encodeURIComponent(q)
+        },
+        {
+          name: "DuckDuckGo",
+          description: "Cerca con un motore alternativo.",
+          url: q => "https://duckduckgo.com/?q=" + encodeURIComponent(q)
+        },
+        {
+          name: "Bing",
+          description: "Prova un altro motore di ricerca.",
+          url: q => "https://www.bing.com/search?q=" + encodeURIComponent(q)
+        }
+      ]
+    };
+
+    function createElement(tag, className, text) {
+      const el = document.createElement(tag);
+      if (className) el.className = className;
+      if (text !== undefined) el.textContent = text;
+      return el;
+    }
+
+    function renderResults(query) {
+      const container = $("results");
+      container.replaceChildren();
+
+      if (!query.trim()) {
+        $("searchStatus").textContent = "Inserisci un termine da cercare.";
+        return;
+      }
+
+      const targets = searchTargets[mode] || searchTargets.all;
+      $("searchStatus").textContent =
+        "Apri una delle fonti per vedere i risultati di: “" + query + "”.";
+
+      targets.forEach(target => {
+        const card = createElement("article", "result");
+        card.append(
+          createElement("h3", "", target.name),
+          createElement("p", "muted", target.description)
+        );
+
+        const link = createElement("a", "action", "Apri risultati ↗");
+        link.href = target.url(query);
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        card.append(link);
+        container.append(card);
+      });
+    }
+
+    $("searchForm").addEventListener("submit", event => {
+      event.preventDefault();
+      lastQuery = $("query").value.trim();
+      renderResults(lastQuery);
     });
 
-    if (!container.children.length) {
-      container.textContent = "Nessuna fonte trovata.";
+    document.querySelectorAll("[data-mode]").forEach(button => {
+      button.addEventListener("click", () => {
+        mode = button.dataset.mode;
+
+        document.querySelectorAll("[data-mode]").forEach(tab => {
+          tab.classList.toggle("active", tab === button);
+          tab.classList.toggle("secondary", tab !== button);
+        });
+
+        if (lastQuery) renderResults(lastQuery);
+        else $("searchStatus").textContent = "Inserisci una ricerca per la categoria scelta.";
+      });
+    });
+
+    const STORAGE_KEY = "webMediaSavedSitesV1";
+
+    function loadSites() {
+      try {
+        const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(value) ? value : [];
+      } catch {
+        return [];
+      }
     }
-  }
 
-  function save() {
-    localStorage.setItem(key, JSON.stringify(sources));
-    render();
-  }
-
-  document.getElementById("add").onclick = () => {
-    const name = nameInput.value.trim();
-    let url;
-
-    try {
-      url = new URL(urlInput.value.trim());
-    } catch {
-      alert("Inserisci un indirizzo web valido.");
-      return;
+    function saveSites(sites) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sites));
+        return true;
+      } catch {
+        $("siteStatus").textContent = "Impossibile salvare i siti in questo browser.";
+        return false;
+      }
     }
 
-    if (!name || !["https:", "http:"].includes(url.protocol)) {
-      alert("Inserisci un nome e un indirizzo HTTP o HTTPS valido.");
-      return;
+    function normalizeUrl(value) {
+      const url = new URL(value);
+      if (!["http:", "https:"].includes(url.protocol)) {
+        throw new Error("Usa un indirizzo che inizi con https:// o http://");
+      }
+      return url.href;
     }
 
-    sources.push({ name, url: url.href });
-    nameInput.value = "";
-    urlInput.value = "";
-    save();
-  };
+    function renderSites() {
+      const container = $("savedSites");
+      const sites = loadSites();
+      container.replaceChildren();
 
-  searchInput.addEventListener("input", render);
-  render();
-</script>
+      if (!sites.length) {
+        container.append(createElement("p", "empty",
+          "Non hai ancora salvato siti. Aggiungine uno qui sopra."));
+        return;
+      }
+
+      sites.forEach((site, index) => {
+        const card = createElement("article", "site");
+        card.append(
+          createElement("h3", "", site.name),
+          createElement("p", "site-url", site.url)
+        );
+
+        const actions = createElement("div", "site-actions");
+        const open = createElement("a", "action", "Apri ↗");
+        open.href = site.url;
+        open.target = "_blank";
+        open.rel = "noopener noreferrer";
+
+        const remove = createElement("button", "secondary danger", "Elimina");
+        remove.type = "button";
+        remove.addEventListener("click", () => {
+          const updated = loadSites();
+          updated.splice(index, 1);
+          if (saveSites(updated)) {
+            renderSites();
+            $("siteStatus").textContent = "Sito eliminato.";
+          }
+        });
+
+        actions.append(open, remove);
+        card.append(actions);
+        container.append(card);
+      });
+    }
+
+    $("siteForm").addEventListener("submit", event => {
+      event.preventDefault();
+
+      const name = $("siteName").value.trim();
+      let url;
+
+      try {
+        url = normalizeUrl($("siteUrl").value.trim());
+      } catch {
+        $("siteStatus").textContent =
+          "Indirizzo non valido. Inserisci un URL completo, ad esempio https://example.com";
+        return;
+      }
+
+      if (!name) {
+        $("siteStatus").textContent = "Inserisci il nome del sito.";
+        return;
+      }
+
+      const sites = loadSites();
+      if (sites.some(site => site.url === url)) {
+        $("siteStatus").textContent = "Questo indirizzo è già salvato.";
+        return;
+      }
+
+      sites.push({ name, url });
+      if (saveSites(sites)) {
+        $("siteName").value = "";
+        $("siteUrl").value = "";
+        $("siteStatus").textContent = "Sito aggiunto.";
+        renderSites();
+      }
+    });
+
+    renderSites();
+  </script>
 </body>
 </html>
