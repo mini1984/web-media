@@ -24,10 +24,10 @@ button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--li
 
 <section class="panel" id="sourcesPanel" style="margin:16px 0">
   <h2>🌐 Catalogo delle fonti</h2>
-  <p>Carica l'elenco delle fonti configurate in Pastebin.</p>
+  <p class="muted">Carica l'elenco delle fonti configurate in Pastebin.</p>
   <div class="row">
     <button class="primary" id="loadSources">↻ Carica fonti</button>
-    <span id="sourcesStatus" role="status">Fonti non ancora caricate</span>
+    <span id="sourcesStatus" class="muted" role="status">Fonti non ancora caricate</span>
   </div>
   <div id="sourcesList" style="margin-top:14px"></div>
 </section>
@@ -266,6 +266,46 @@ if(!playlists.length){playlists=[{id:'example-it',name:'TV italiana (esempio)',u
 else{activePlaylistId=playlists.some(p=>p.id===activePlaylistId)?activePlaylistId:playlists[0].id;storePlaylists();loadPlaylist(activePlaylistId)}
 if(els.epgUrl.value)setStatus(els.epgStatus,'URL EPG salvato. Premi “Carica guida TV” per aggiornarla.')
 })();
+
+
+// Catalogo delle fonti caricato da Cloudflare Pages Functions
+const loadSourcesButton = document.getElementById('loadSources');
+const sourcesStatus = document.getElementById('sourcesStatus');
+const sourcesList = document.getElementById('sourcesList');
+
+if (loadSourcesButton && sourcesStatus && sourcesList) {
+  loadSourcesButton.addEventListener('click', async () => {
+    loadSourcesButton.disabled = true;
+    sourcesStatus.textContent = 'Caricamento delle fonti…';
+    sourcesList.replaceChildren();
+    try {
+      const response = await fetch('/api/catalog', { headers: { Accept: 'application/json' }, cache: 'no-store' });
+      if (!response.ok) throw new Error('Errore HTTP ' + response.status);
+      const data = await response.json();
+      if (!data.success || !Array.isArray(data.sources)) throw new Error('Risposta del catalogo non valida');
+      sourcesStatus.textContent = data.total + ' fonti caricate · classificazione preliminare';
+      const groupNames = { anime: 'Anime', film_serie_da_verificare: 'Film e serie da verificare', tv_live_da_verificare: 'TV live da verificare', torrent: 'Torrent', da_verificare: 'Altre fonti da verificare' };
+      const grouped = {};
+      for (const source of data.sources) { const type = source.type || 'da_verificare'; if (!grouped[type]) grouped[type] = []; grouped[type].push(source); }
+      for (const [type, sources] of Object.entries(grouped)) {
+        const section = document.createElement('div'); section.style.marginTop = '16px';
+        const heading = document.createElement('h3'); heading.textContent = (groupNames[type] || type) + ' (' + sources.length + ')'; section.appendChild(heading);
+        const list = document.createElement('ul'); list.style.paddingLeft = '22px';
+        for (const source of sources) {
+          const item = document.createElement('li'); item.style.marginBottom = '7px';
+          const link = document.createElement('a'); link.href = source.url; link.textContent = source.host || source.url; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.style.color = 'var(--accent2)'; item.appendChild(link);
+          const status = document.createElement('span'); status.className = 'muted small'; status.textContent = ' — non verificata'; item.appendChild(status); list.appendChild(item);
+        }
+        section.appendChild(list); sourcesList.appendChild(section);
+      }
+      if (data.sources.length === 0) sourcesList.textContent = 'Nessuna fonte trovata.';
+    } catch (error) {
+      sourcesStatus.textContent = 'Impossibile caricare le fonti.';
+      const message = document.createElement('p'); message.className = 'muted'; message.textContent = error && error.message ? error.message : 'Errore sconosciuto'; sourcesList.appendChild(message);
+    } finally { loadSourcesButton.disabled = false; }
+  });
+}
+
 </script>
 </body>
 </html>
