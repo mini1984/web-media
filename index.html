@@ -1,494 +1,370 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#10121b">
-  <title>Web Media</title>
-  <style>
-    :root {
-      color-scheme: dark;
-      --bg: #10121b;
-      --panel: #1b1e2b;
-      --panel2: #24283a;
-      --text: #f5f6ff;
-      --muted: #a5abc2;
-      --accent: #8b7cff;
-      --border: #343950;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      line-height: 1.5;
-    }
-
-    header {
-      padding: 28px 18px 22px;
-      background: linear-gradient(135deg, #252345, #151827 75%);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .wrap { max-width: 900px; margin: auto; }
-
-    .brand {
-      color: #b7adff;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-    }
-
-    h1 { margin: 5px 0; font-size: clamp(30px, 7vw, 44px); }
-    h2 { font-size: 21px; margin: 0 0 14px; }
-    h3 { font-size: 16px; margin: 0 0 5px; }
-    p { margin: 6px 0; }
-    .muted { color: var(--muted); font-size: 14px; }
-
-    main {
-      width: min(100% - 28px, 850px);
-      margin: 22px auto 50px;
-    }
-
-    section {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 19px;
-      margin-bottom: 18px;
-    }
-
-    .searchbox {
-      display: flex;
-      gap: 9px;
-      margin: 16px 0;
-    }
-
-    input {
-      min-width: 0;
-      width: 100%;
-      padding: 13px 14px;
-      color: var(--text);
-      background: #111421;
-      border: 1px solid #414761;
-      border-radius: 11px;
-      font-size: 16px;
-    }
-
-    input:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 1px;
-    }
-
-    button, .action {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border: 0;
-      border-radius: 10px;
-      padding: 11px 14px;
-      background: var(--accent);
-      color: white;
-      font-size: 14px;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-    }
-
-    button.secondary, .action.secondary {
-      background: var(--panel2);
-      border: 1px solid var(--border);
-    }
-
-    button.danger { color: #ffb8c0; }
-    button:active, .action:active { transform: scale(.98); }
-
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 12px 0;
-    }
-
-    .tabs button { flex: 1 1 120px; }
-    .tabs button.active { background: #5f51c8; }
-
-    .results, .saved-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
-      gap: 11px;
-      margin-top: 14px;
-    }
-
-    .result, .site {
-      min-width: 0;
-      padding: 14px;
-      background: #151827;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-    }
-
-    .result p, .site p {
-      overflow-wrap: anywhere;
-    }
-
-    .result .action { margin-top: 12px; width: 100%; }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr auto;
-      gap: 9px;
-      align-items: center;
-    }
-
-    .site-url {
-      color: var(--muted);
-      font-size: 12px;
-      overflow-wrap: anywhere;
-      margin: 8px 0;
-    }
-
-    .site-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-
-    .empty {
-      color: var(--muted);
-      padding: 15px 0;
-      font-size: 14px;
-    }
-
-    footer {
-      text-align: center;
-      color: var(--muted);
-      font-size: 12px;
-      padding: 8px 15px 28px;
-    }
-
-    @media (max-width: 580px) {
-      .searchbox { flex-direction: column; }
-      .searchbox button { width: 100%; }
-      .form-grid { grid-template-columns: 1fr; }
-      section { padding: 15px; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#10131d">
+<title>Web Media — TV Live</title>
+<style>
+:root{color-scheme:dark;--bg:#0c0f17;--panel:#151a27;--panel2:#1d2434;--line:#2a3347;--text:#f4f6ff;--muted:#a6b0c5;--accent:#7c6cff;--accent2:#4b40b5;--good:#69d5a5;--danger:#ff8794}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#171b2d 0,#0c0f17 55%);color:var(--text);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
+header{padding:25px 16px 18px;border-bottom:1px solid var(--line);background:#10131de8;position:sticky;top:0;z-index:5;backdrop-filter:blur(12px)}
+.wrap{max-width:1200px;margin:auto}
+.brand{font-size:11px;font-weight:800;letter-spacing:3px;color:#b8b0ff;text-transform:uppercase}
+h1{font-size:clamp(28px,6vw,42px);margin:4px 0}
+h2{font-size:19px;margin:0 0 12px}
+h3{font-size:15px;margin:0}
+p{margin:6px 0}
+.muted{color:var(--muted);font-size:13px}
+main{max-width:1200px;margin:20px auto;padding:0 14px 36px}
+.panel{background:linear-gradient(145deg,#171c2a,#121622);border:1px solid var(--line);border-radius:17px;padding:16px;margin-bottom:15px}
+.toolbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+input,select{width:100%;min-width:0;padding:12px 13px;background:#0d111b;color:var(--text);border:1px solid #35405a;border-radius:10px;font:inherit}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button,.button{border:0;border-radius:10px;background:var(--accent);color:white;padding:11px 14px;font:600 14px system-ui;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:7px}
+button.secondary,.button.secondary{background:var(--panel2);border:1px solid var(--line)}
+button:disabled{opacity:.55;cursor:wait}
+.source-grid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:9px}
+.filters{display:grid;grid-template-columns:minmax(0,1fr) minmax(150px,230px);gap:9px;margin-top:12px}
+.status{font-size:13px;color:var(--muted);margin:12px 0}
+.status.error{color:var(--danger)}.status.ok{color:var(--good)}
+.content{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr);gap:15px;align-items:start}
+.player-box{position:sticky;top:154px}
+video{display:block;width:100%;aspect-ratio:16/9;background:#030407;border-radius:12px}
+.now-playing{margin-top:10px;display:flex;align-items:center;gap:10px;min-width:0}
+.now-playing img{width:42px;height:42px;object-fit:contain;background:#0b0e16;border-radius:9px;padding:4px}
+.now-title{min-width:0;flex:1}.now-title strong{display:block;overflow-wrap:anywhere}
+.channel-tools{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.channel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:10px}
+.channel{min-width:0;text-align:left;display:flex;align-items:center;gap:10px;padding:10px;background:#111623;border:1px solid var(--line);border-radius:12px;color:var(--text);transition:border-color .15s}
+.channel.active{border-color:var(--accent);background:#201e3a}
+.logo{width:42px;height:42px;flex:0 0 42px;object-fit:contain;background:#0b0e16;border-radius:8px;padding:4px}
+.logo-fallback{display:flex;align-items:center;justify-content:center;font-weight:800;color:#b8b0ff}
+.channel-name{font-size:13px;font-weight:650;display:block;overflow-wrap:anywhere}
+.channel-group{font-size:11px;color:var(--muted);display:block;margin-top:3px}
+.grid-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.badge{font-size:11px;background:#262346;color:#d3ceff;border-radius:999px;padding:4px 8px;white-space:nowrap}
+.empty{padding:22px 8px;text-align:center;color:var(--muted);font-size:14px}
+.small{font-size:12px}
+details summary{cursor:pointer;font-weight:650}
+details .details-body{padding-top:12px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:8px 14px 28px}
+@media(max-width:780px){header{position:static}.content{grid-template-columns:1fr}.player-box{position:static}.filters{grid-template-columns:1fr}.channel-grid{grid-template-columns:repeat(auto-fill,minmax(135px,1fr))}}
+@media(max-width:420px){main{padding-left:10px;padding-right:10px}.panel{padding:12px}.source-grid{grid-template-columns:1fr}.channel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.channel{gap:7px;padding:8px}.logo{width:34px;height:34px;flex-basis:34px}}
+</style>
 </head>
 <body>
-  <header>
-    <div class="wrap">
-      <div class="brand">Il tuo spazio multimediale</div>
-      <h1>Web Media</h1>
-      <p class="muted">Cerca, scopri e organizza i tuoi contenuti sul web.</p>
-    </div>
-  </header>
-
-  <main>
-    <section>
-      <h2>🔎 Cerca contenuti</h2>
-      <p class="muted">Inserisci un titolo, un film, una serie o un argomento.</p>
-
-      <form id="searchForm">
-        <div class="searchbox">
-          <input id="query" type="search"
-            placeholder="Es. Interstellar, documentari, musica..."
-            aria-label="Cosa vuoi cercare?" required>
-          <button type="button" id="searchButton">Cerca</button>
-        </div>
-      </form>
-
-      <div class="tabs" aria-label="Tipo di ricerca">
-        <button type="button" class="active" data-mode="all">Tutto</button>
-        <button type="button" class="secondary" data-mode="films">Film e serie</button>
-        <button type="button" class="secondary" data-mode="video">Video</button>
-        <button type="button" class="secondary" data-mode="web">Web</button>
+<header><div class="wrap">
+  <div class="brand">Il tuo spazio multimediale</div>
+  <h1>Web Media <span style="color:#a99fff">TV Live</span></h1>
+  <p class="muted">Canali live da playlist M3U/M3U8 pubbliche e autorizzate.</p>
+</div></header>
+<main>
+  <section class="panel">
+    <h2>📡 Carica una playlist</h2>
+    <p class="muted">Inserisci un URL M3U/M3U8 accessibile dal browser. Puoi anche provare la playlist pubblica italiana di esempio.</p>
+    <form id="playlistForm">
+      <div class="source-grid">
+        <input id="playlistUrl" type="url" autocomplete="url" placeholder="https://esempio.it/playlist.m3u" aria-label="Indirizzo della playlist" required>
+        <button id="loadButton" type="submit">Carica canali</button>
       </div>
+    </form>
+    <div class="toolbar" style="margin-top:9px">
+      <button id="demoButton" class="secondary" type="button">Usa playlist italiana di esempio</button>
+      <button id="reloadButton" class="secondary" type="button">Aggiorna lista</button>
+    </div>
+    <p id="status" class="status" role="status">Inserisci una playlist oppure premi “Usa playlist italiana di esempio”.</p>
+    <details>
+      <summary>Informazioni e limiti</summary>
+      <div class="details-body muted">
+        <p>Questa pagina legge playlist in formato M3U e riproduce i flussi compatibili con il browser. Alcune fonti bloccano le richieste esterne (CORS), richiedono autenticazione o non consentono la riproduzione incorporata.</p>
+        <p>Usa soltanto playlist e canali che sei autorizzato a visualizzare. La disponibilità dei flussi può cambiare.</p>
+        <p>I preferiti vengono salvati localmente sul dispositivo. Questa versione non invia dati a un server.</p>
+      </div>
+    </details>
+  </section>
 
-      <p id="searchStatus" class="muted">Scegli una categoria e inserisci una ricerca.</p>
-      <div id="results" class="results"></div>
+  <div class="content">
+    <section class="panel player-box">
+      <h2>▶️ Lettore</h2>
+      <video id="video" controls playsinline webkit-playsinline preload="metadata"></video>
+      <div class="now-playing">
+        <img id="nowLogo" alt="" hidden>
+        <div class="now-title"><strong id="nowTitle">Nessun canale selezionato</strong><span id="nowGroup" class="muted">Scegli un canale dalla lista.</span></div>
+      </div>
+      <div class="channel-tools">
+        <button id="stopButton" class="secondary" type="button">Ferma</button>
+        <button id="favoriteCurrent" class="secondary" type="button" disabled>☆ Preferito</button>
+      </div>
+      <p id="playerStatus" class="muted small">La riproduzione parte quando selezioni un canale.</p>
     </section>
 
-    <section>
-      <h2>🌐 I miei siti</h2>
-      <p class="muted">Salva i siti che usi più spesso per ritrovarli rapidamente.</p>
-
-      <form id="siteForm">
-        <div class="form-grid">
-          <input id="siteName" type="text" placeholder="Nome del sito" required>
-          <input id="siteUrl" type="url" placeholder="https://esempio.com" required>
-          <button type="submit">Aggiungi</button>
-        </div>
-      </form>
-
-      <div id="savedSites" class="saved-list"></div>
-      <p id="siteStatus" class="muted"></p>
+    <section class="panel">
+      <div class="grid-head">
+        <h2>📺 Canali</h2>
+        <span id="countBadge" class="badge">0 canali</span>
+      </div>
+      <div class="filters">
+        <input id="channelSearch" type="search" placeholder="Cerca un canale…" aria-label="Cerca un canale">
+        <select id="categoryFilter" aria-label="Filtra per categoria"><option value="">Tutte le categorie</option></select>
+      </div>
+      <div class="toolbar" style="margin-top:10px">
+        <button id="allButton" class="secondary" type="button">Tutti</button>
+        <button id="favoritesButton" class="secondary" type="button">☆ Preferiti</button>
+      </div>
+      <div id="channels" class="channel-grid" style="margin-top:13px"></div>
+      <div id="empty" class="empty">Carica una playlist per visualizzare i canali.</div>
     </section>
+  </div>
+</main>
+<footer>Web Media · Lettore per flussi compatibili · La disponibilità dipende dalla fonte</footer>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
+<script>
+(() => {
+  "use strict";
+  const EXAMPLE_PLAYLIST = "https://iptv-org.github.io/iptv/countries/it.m3u";
+  const $ = id => document.getElementById(id);
+  const els = {
+    form:$("playlistForm"), url:$("playlistUrl"), load:$("loadButton"), demo:$("demoButton"),
+    reload:$("reloadButton"), status:$("status"), video:$("video"), nowLogo:$("nowLogo"),
+    nowTitle:$("nowTitle"), nowGroup:$("nowGroup"), playerStatus:$("playerStatus"),
+    stop:$("stopButton"), favCurrent:$("favoriteCurrent"), search:$("channelSearch"),
+    category:$("categoryFilter"), channels:$("channels"), empty:$("empty"), count:$("countBadge"),
+    all:$("allButton"), favorites:$("favoritesButton")
+  };
+  let allChannels = [];
+  let currentChannel = null;
+  let hls = null;
+  let showFavoritesOnly = false;
+  let currentPlaylist = "";
+  const favorites = new Set(readFavorites());
 
-    <section>
-      <h2>💡 Come funziona</h2>
-      <p class="muted">
-        Web Media apre le ricerche su servizi esterni. I risultati, la disponibilità
-        dei contenuti e le eventuali restrizioni dipendono dai singoli siti.
-        Non è un servizio di streaming e non ospita film o video.
-      </p>
-    </section>
-  </main>
-
-  <footer>Web Media · La tua porta d'accesso al web</footer>
-
-  <script>
-    const $ = (id) => document.getElementById(id);
-
-    let mode = "all";
-    let lastQuery = "";
-
-    const searchTargets = {
-      all: [
-        {
-          name: "Google",
-          description: "Cerca pagine, titoli e contenuti sul web.",
-          url: q => "https://www.google.com/search?q=" + encodeURIComponent(q)
-        },
-        {
-          name: "YouTube",
-          description: "Cerca video, trailer e contenuti multimediali.",
-          url: q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q)
-        },
-        {
-          name: "DuckDuckGo",
-          description: "Un'altra opzione per cercare sul web.",
-          url: q => "https://duckduckgo.com/?q=" + encodeURIComponent(q)
+  function readFavorites() {
+    try { return JSON.parse(localStorage.getItem("webMediaFavorites") || "[]"); }
+    catch (_) { return []; }
+  }
+  function saveFavorites() {
+    try { localStorage.setItem("webMediaFavorites", JSON.stringify([...favorites])); }
+    catch (_) {}
+  }
+  function setStatus(message, type="") {
+    els.status.textContent = message;
+    els.status.className = "status" + (type ? " " + type : "");
+  }
+  function normalizeUrl(value) {
+    const u = new URL(value);
+    if (!["http:","https:"].includes(u.protocol)) throw new Error("Sono consentiti soltanto indirizzi HTTP o HTTPS.");
+    return u.href;
+  }
+  function attrValue(line, name) {
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const match = line.match(new RegExp("(?:^|\\\\s)" + escaped + '="([^"]*)"', "i"));
+    return match ? match[1].trim() : "";
+  }
+  function parseM3U(text, baseUrl) {
+    const lines = text.replace(/^\uFEFF/, "").split(/\r?\n/);
+    const result = [];
+    let meta = null;
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line) continue;
+      if (line.startsWith("#EXTINF")) {
+        const comma = line.indexOf(",");
+        const name = comma >= 0 ? line.slice(comma + 1).trim() : "";
+        const group = attrValue(line, "group-title") || "Altri";
+        const logo = attrValue(line, "tvg-logo");
+        const id = attrValue(line, "tvg-id");
+        meta = { name: name || id || "Canale senza nome", group, logo, id };
+      } else if (line.startsWith("#")) {
+        continue;
+      } else {
+        let url;
+        try { url = new URL(line, baseUrl).href; } catch (_) { meta = null; continue; }
+        if (/^(https?:\/\/)/i.test(url)) {
+          const item = meta || { name: new URL(url).hostname, group: "Altri", logo: "", id: "" };
+          result.push({...item, url, key: item.id || (item.name + "|" + url)});
         }
-      ],
-      films: [
-        {
-          name: "Film e serie su Google",
-          description: "Cerca titoli, recensioni e pagine dedicate a film e serie.",
-          url: q => "https://www.google.com/search?q=" + encodeURIComponent(q + " film serie TV")
-        },
-        {
-          name: "IMDb",
-          description: "Cerca schede, cast e informazioni sui titoli.",
-          url: q => "https://www.imdb.com/find/?q=" + encodeURIComponent(q)
-        },
-        {
-          name: "JustWatch",
-          description: "Controlla dove un titolo potrebbe essere disponibile in streaming.",
-          url: q => "https://www.justwatch.com/it/ricerca?q=" + encodeURIComponent(q)
-        }
-      ],
-      video: [
-        {
-          name: "YouTube",
-          description: "Cerca video, trailer, documentari e altro.",
-          url: q => "https://www.youtube.com/results?search_query=" + encodeURIComponent(q)
-        },
-        {
-          name: "Vimeo",
-          description: "Cerca video e produzioni indipendenti.",
-          url: q => "https://vimeo.com/search?q=" + encodeURIComponent(q)
-        },
-        {
-          name: "Video su Google",
-          description: "Trova video indicizzati da Google.",
-          url: q => "https://www.google.com/search?tbm=vid&q=" + encodeURIComponent(q)
-        }
-      ],
-      web: [
-        {
-          name: "Google",
-          description: "Cerca pagine web e siti.",
-          url: q => "https://www.google.com/search?q=" + encodeURIComponent(q)
-        },
-        {
-          name: "DuckDuckGo",
-          description: "Cerca con un motore alternativo.",
-          url: q => "https://duckduckgo.com/?q=" + encodeURIComponent(q)
-        },
-        {
-          name: "Bing",
-          description: "Prova un altro motore di ricerca.",
-          url: q => "https://www.bing.com/search?q=" + encodeURIComponent(q)
-        }
-      ]
-    };
-
-    function createElement(tag, className, text) {
-      const el = document.createElement(tag);
-      if (className) el.className = className;
-      if (text !== undefined) el.textContent = text;
-      return el;
-    }
-
-    function renderResults(query) {
-      const container = $("results");
-      container.replaceChildren();
-
-      if (!query.trim()) {
-        $("searchStatus").textContent = "Inserisci un termine da cercare.";
-        return;
+        meta = null;
       }
-
-      const targets = searchTargets[mode] || searchTargets.all;
-      $("searchStatus").textContent =
-        "Apri una delle fonti per vedere i risultati di: “" + query + "”.";
-
-      targets.forEach(target => {
-        const card = createElement("article", "result");
-        card.append(
-          createElement("h3", "", target.name),
-          createElement("p", "muted", target.description)
-        );
-
-        const link = createElement("a", "action", "Apri risultati ↗");
-        link.href = target.url(query);
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        card.append(link);
-        container.append(card);
-      });
     }
-
-    function runSearch() {
-  lastQuery = $("query").value.trim();
-
-  if (!lastQuery) {
-    $("searchStatus").textContent = "Inserisci un termine da cercare.";
-    $("query").focus();
-    return;
+    const seen = new Set();
+    return result.filter(c => {
+      const key = c.url;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }
+  async function loadPlaylist(url) {
+    let safeUrl;
+    try { safeUrl = normalizeUrl(url); }
+    catch (e) { setStatus(e.message, "error"); return; }
+    els.load.disabled = true;
+    els.load.textContent = "Caricamento…";
+    setStatus("Sto scaricando e leggendo la playlist…");
+    try {
+      const response = await fetch(safeUrl, {cache:"no-store"});
+      if (!response.ok) throw new Error("Il server ha risposto con HTTP " + response.status + ".");
+      const text = await response.text();
+      if (!text.trim().startsWith("#EXTM3U") && !text.includes("#EXTINF")) {
+        throw new Error("La risposta non sembra una playlist M3U. Verifica che l'URL punti direttamente al file.");
+      }
+      const parsed = parseM3U(text, safeUrl);
+      if (!parsed.length) throw new Error("Playlist letta, ma non contiene indirizzi di canali riconoscibili.");
+      allChannels = parsed;
+      currentPlaylist = safeUrl;
+      els.url.value = safeUrl;
+      showFavoritesOnly = false;
+      populateCategories();
+      renderChannels();
+      setStatus("Playlist caricata: " + parsed.length + " canali trovati.", "ok");
+    } catch (error) {
+      const reason = error instanceof TypeError
+        ? "Il browser non riesce a leggere la playlist. La fonte potrebbe bloccare le richieste esterne (CORS) o non essere raggiungibile."
+        : error.message || "Errore durante il caricamento.";
+      setStatus(reason, "error");
+    } finally {
+      els.load.disabled = false;
+      els.load.textContent = "Carica canali";
+    }
+  }
+  function populateCategories() {
+    const previous = els.category.value;
+    const groups = [...new Set(allChannels.map(c => c.group || "Altri"))].sort((a,b)=>a.localeCompare(b,"it"));
+    els.category.replaceChildren(new Option("Tutte le categorie", ""));
+    groups.forEach(group => els.category.add(new Option(group, group)));
+    if (groups.includes(previous)) els.category.value = previous;
+  }
+  function renderChannels() {
+    const term = els.search.value.trim().toLocaleLowerCase("it");
+    const group = els.category.value;
+    const list = allChannels.filter(c =>
+      (!showFavoritesOnly || favorites.has(c.key) || favorites.has(c.url)) &&
+      (!group || c.group === group) &&
+      (!term || c.name.toLocaleLowerCase("it").includes(term) || (c.group||"").toLocaleLowerCase("it").includes(term))
+    );
+    els.channels.replaceChildren();
+    els.count.textContent = list.length + (list.length === 1 ? " canale" : " canali");
+    els.empty.hidden = list.length > 0;
+    els.empty.textContent = showFavoritesOnly && !list.length
+      ? "Non hai ancora canali preferiti in questa playlist."
+      : allChannels.length ? "Nessun canale corrisponde ai filtri." : "Carica una playlist per visualizzare i canali.";
+    list.slice(0, 1500).forEach(channel => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "channel" + (currentChannel && currentChannel.url === channel.url ? " active" : "");
+      button.setAttribute("aria-label", "Riproduci " + channel.name);
+      const img = document.createElement("img");
+      img.className = "logo"; img.alt = ""; img.loading = "lazy";
+      if (channel.logo) {
+        img.src = channel.logo;
+        img.onerror = () => { img.replaceWith(makeFallback(channel.name)); };
+      } else {
+        img.replaceWith(makeFallback(channel.name));
+      }
+      const text = document.createElement("span");
+      text.style.minWidth = "0";
+      const name = document.createElement("span"); name.className = "channel-name"; name.textContent = channel.name;
+      const category = document.createElement("span"); category.className = "channel-group"; category.textContent = channel.group || "Altri";
+      text.append(name, category);
+      button.append(img, text);
+      button.addEventListener("click", () => playChannel(channel));
+      els.channels.append(button);
+    });
+    if (list.length > 1500) {
+      const note = document.createElement("p"); note.className = "muted"; note.textContent = "Visualizzati i primi 1500 risultati. Usa la ricerca per trovare altri canali.";
+      els.channels.append(note);
+    }
+  }
+  function makeFallback(name) {
+    const box = document.createElement("span");
+    box.className = "logo logo-fallback";
+    box.textContent = (name.trim()[0] || "TV").toUpperCase();
+    return box;
+  }
+  function stopPlayback() {
+    if (hls) { hls.destroy(); hls = null; }
+    els.video.pause();
+    els.video.removeAttribute("src");
+    els.video.load();
+    els.playerStatus.textContent = "Riproduzione fermata.";
+  }
+  async function playChannel(channel) {
+    currentChannel = channel;
+    els.nowTitle.textContent = channel.name;
+    els.nowGroup.textContent = channel.group || "Canale live";
+    if (channel.logo) {
+      els.nowLogo.src = channel.logo; els.nowLogo.hidden = false;
+      els.nowLogo.onerror = () => { els.nowLogo.hidden = true; };
+    } else els.nowLogo.hidden = true;
+    els.favCurrent.disabled = false;
+    updateFavoriteButton();
+    renderChannels();
+    stopPlayback();
+    els.playerStatus.textContent = "Caricamento del flusso…";
+    const url = channel.url;
+    try {
+      if (els.video.canPlayType("application/vnd.apple.mpegurl")) {
+        els.video.src = url;
+        await els.video.play();
+      } else if (window.Hls && Hls.isSupported() && /\.m3u8($|\?)/i.test(url)) {
+        hls = new Hls({enableWorker:true});
+        hls.loadSource(url);
+        hls.attachMedia(els.video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          els.video.play().catch(() => { els.playerStatus.textContent = "Premi ▶ nel lettore per avviare il canale."; });
+        });
+        hls.on(Hls.Events.ERROR, (_event, data) => {
+          if (data.fatal) els.playerStatus.textContent = "Questo flusso non è riproducibile o non è raggiungibile.";
+        });
+      } else {
+        els.video.src = url;
+        await els.video.play();
+      }
+      els.playerStatus.textContent = "Canale selezionato. Se non parte, la fonte potrebbe non essere compatibile o disponibile.";
+    } catch (_) {
+      els.playerStatus.textContent = "Il canale non è partito automaticamente. Premi ▶ oppure prova un altro flusso.";
+    }
+  }
+  function updateFavoriteButton() {
+    if (!currentChannel) return;
+    const active = favorites.has(currentChannel.key) || favorites.has(currentChannel.url);
+    els.favCurrent.textContent = active ? "★ Nei preferiti" : "☆ Preferito";
+  }
+  function toggleCurrentFavorite() {
+    if (!currentChannel) return;
+    const key = currentChannel.key;
+    if (favorites.has(key) || favorites.has(currentChannel.url)) {
+      favorites.delete(key); favorites.delete(currentChannel.url);
+    } else favorites.add(key);
+    saveFavorites(); updateFavoriteButton(); renderChannels();
   }
 
-  renderResults(lastQuery);
-}
+  els.form.addEventListener("submit", event => {
+    event.preventDefault();
+    if (els.url.value.trim()) loadPlaylist(els.url.value.trim());
+  });
+  els.demo.addEventListener("click", () => {
+    els.url.value = EXAMPLE_PLAYLIST;
+    loadPlaylist(EXAMPLE_PLAYLIST);
+  });
+  els.reload.addEventListener("click", () => {
+    if (currentPlaylist) loadPlaylist(currentPlaylist);
+    else if (els.url.value.trim()) loadPlaylist(els.url.value.trim());
+    else setStatus("Inserisci prima l'indirizzo di una playlist.", "error");
+  });
+  els.search.addEventListener("input", renderChannels);
+  els.category.addEventListener("change", renderChannels);
+  els.all.addEventListener("click", () => { showFavoritesOnly = false; renderChannels(); });
+  els.favorites.addEventListener("click", () => { showFavoritesOnly = true; renderChannels(); });
+  els.favCurrent.addEventListener("click", toggleCurrentFavorite);
+  els.stop.addEventListener("click", stopPlayback);
 
-$("searchButton").addEventListener("click", runSearch);
-
-$("searchForm").addEventListener("submit", event => {
-  event.preventDefault();
-  runSearch();
-});
-
-    document.querySelectorAll("[data-mode]").forEach(button => {
-      button.addEventListener("click", () => {
-        mode = button.dataset.mode;
-
-        document.querySelectorAll("[data-mode]").forEach(tab => {
-          tab.classList.toggle("active", tab === button);
-          tab.classList.toggle("secondary", tab !== button);
-        });
-
-        if (lastQuery) renderResults(lastQuery);
-        else $("searchStatus").textContent = "Inserisci una ricerca per la categoria scelta.";
-      });
-    });
-
-    const STORAGE_KEY = "webMediaSavedSitesV1";
-
-    function loadSites() {
-      try {
-        const value = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-        return Array.isArray(value) ? value : [];
-      } catch {
-        return [];
-      }
-    }
-
-    function saveSites(sites) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(sites));
-        return true;
-      } catch {
-        $("siteStatus").textContent = "Impossibile salvare i siti in questo browser.";
-        return false;
-      }
-    }
-
-    function normalizeUrl(value) {
-      const url = new URL(value);
-      if (!["http:", "https:"].includes(url.protocol)) {
-        throw new Error("Usa un indirizzo che inizi con https:// o http://");
-      }
-      return url.href;
-    }
-
-    function renderSites() {
-      const container = $("savedSites");
-      const sites = loadSites();
-      container.replaceChildren();
-
-      if (!sites.length) {
-        container.append(createElement("p", "empty",
-          "Non hai ancora salvato siti. Aggiungine uno qui sopra."));
-        return;
-      }
-
-      sites.forEach((site, index) => {
-        const card = createElement("article", "site");
-        card.append(
-          createElement("h3", "", site.name),
-          createElement("p", "site-url", site.url)
-        );
-
-        const actions = createElement("div", "site-actions");
-        const open = createElement("a", "action", "Apri ↗");
-        open.href = site.url;
-        open.target = "_blank";
-        open.rel = "noopener noreferrer";
-
-        const remove = createElement("button", "secondary danger", "Elimina");
-        remove.type = "button";
-        remove.addEventListener("click", () => {
-          const updated = loadSites();
-          updated.splice(index, 1);
-          if (saveSites(updated)) {
-            renderSites();
-            $("siteStatus").textContent = "Sito eliminato.";
-          }
-        });
-
-        actions.append(open, remove);
-        card.append(actions);
-        container.append(card);
-      });
-    }
-
-    $("siteForm").addEventListener("submit", event => {
-      event.preventDefault();
-
-      const name = $("siteName").value.trim();
-      let url;
-
-      try {
-        url = normalizeUrl($("siteUrl").value.trim());
-      } catch {
-        $("siteStatus").textContent =
-          "Indirizzo non valido. Inserisci un URL completo, ad esempio https://example.com";
-        return;
-      }
-
-      if (!name) {
-        $("siteStatus").textContent = "Inserisci il nome del sito.";
-        return;
-      }
-
-      const sites = loadSites();
-      if (sites.some(site => site.url === url)) {
-        $("siteStatus").textContent = "Questo indirizzo è già salvato.";
-        return;
-      }
-
-      sites.push({ name, url });
-      if (saveSites(sites)) {
-        $("siteName").value = "";
-        $("siteUrl").value = "";
-        $("siteStatus").textContent = "Sito aggiunto.";
-        renderSites();
-      }
-    });
-
-    renderSites();
-  </script>
+  // Carica automaticamente una playlist pubblica di esempio al primo accesso.
+  els.url.value = EXAMPLE_PLAYLIST;
+  loadPlaylist(EXAMPLE_PLAYLIST);
+})();
+</script>
 </body>
 </html>
