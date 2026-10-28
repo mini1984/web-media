@@ -32,6 +32,30 @@ button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--li
   <div id="sourcesList" style="margin-top:14px"></div>
 </section>
 
+<section class="panel" id="titleCatalogPanel" style="margin:16px 0">
+  <h2>🎬 Catalogo film e serie TV</h2>
+  <p class="muted">Cerca titoli e metadati su Wikidata senza chiave API. Le informazioni e le immagini possono essere incomplete; questo catalogo non fornisce direttamente i video.</p>
+  <div class="row">
+    <div class="field" style="flex:2 1 260px">
+      <label for="titleSearch">Titolo da cercare</label>
+      <input id="titleSearch" type="search" placeholder="Es. Interstellar, The Office…" autocomplete="off">
+    </div>
+    <div class="field" style="flex:1 1 150px">
+      <label for="titleKind">Categoria</label>
+      <select id="titleKind">
+        <option value="all">Film e serie TV</option>
+        <option value="film">Solo film</option>
+        <option value="series">Solo serie TV</option>
+      </select>
+    </div>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <button class="primary" id="searchTitles">🔎 Cerca titoli</button>
+    <span id="titleSearchStatus" class="muted" role="status">Inserisci un titolo per iniziare.</span>
+  </div>
+  <div id="titleResults" class="titleResults" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:14px"></div>
+</section>
+
 <div class="grid">
 <section class="panel">
   <h2>📚 Le mie playlist</h2>
@@ -305,6 +329,122 @@ if (loadSourcesButton && sourcesStatus && sourcesList) {
     } finally { loadSourcesButton.disabled = false; }
   });
 }
+
+// Catalogo di metadati film e serie TV tramite API pubblica Wikidata.
+(() => {
+  const input = document.getElementById('titleSearch');
+  const filter = document.getElementById('titleKind');
+  const button = document.getElementById('searchTitles');
+  const status = document.getElementById('titleSearchStatus');
+  const results = document.getElementById('titleResults');
+  if (!input || !filter || !button || !status || !results) return;
+
+  const API = 'https://www.wikidata.org/w/api.php';
+  const FILM_TYPES = new Set(['Q11424', 'Q24869']);
+  const SERIES_TYPES = new Set(['Q5398426', 'Q581714', 'Q1259759', 'Q21191270']);
+
+  function claimIds(entity, property) {
+    return (entity.claims?.[property] || [])
+      .map(c => c.mainsnak?.datavalue?.value?.id)
+      .filter(Boolean);
+  }
+  function getKind(entity) {
+    const types = new Set(claimIds(entity, 'P31'));
+    if ([...FILM_TYPES].some(id => types.has(id))) return 'film';
+    if ([...SERIES_TYPES].some(id => types.has(id))) return 'series';
+    return 'other';
+  }
+  function getYear(entity) {
+    const claims = entity.claims?.P577 || entity.claims?.P571 || [];
+    for (const c of claims) {
+      const value = c.mainsnak?.datavalue?.value?.time;
+      const match = value && value.match(/[+-](\d{4})-/);
+      if (match) return match[1];
+    }
+    return '';
+  }
+  function addText(parent, tag, text, className) {
+    const el = document.createElement(tag);
+    el.textContent = text;
+    if (className) el.className = className;
+    parent.appendChild(el);
+    return el;
+  }
+  function createCard(entity) {
+    const name = entity.labels?.it?.value || entity.labels?.en?.value || entity.id;
+    const description = entity.descriptions?.it?.value || entity.descriptions?.en?.value || 'Descrizione non disponibile.';
+    const kind = getKind(entity);
+    const card = document.createElement('article');
+    card.className = 'panel';
+    card.style.cssText = 'padding:12px;min-width:0;overflow-wrap:anywhere';
+
+    const imageName = entity.claims?.P18?.[0]?.mainsnak?.datavalue?.value;
+    if (imageName) {
+      const image = document.createElement('img');
+      image.src = 'https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent(imageName) + '?width=360';
+      image.alt = 'Immagine di ' + name;
+      image.loading = 'lazy';
+      image.style.cssText = 'width:100%;height:190px;object-fit:contain;background:#080f1c;border-radius:9px;margin-bottom:10px';
+      image.onerror = () => image.remove();
+      card.appendChild(image);
+    }
+    addText(card, 'h3', name).style.margin = '0 0 7px';
+    const kindLabel = kind === 'film' ? 'Film' : kind === 'series' ? 'Serie TV' : 'Tipo da verificare';
+    addText(card, 'p', kindLabel + (getYear(entity) ? ' · ' + getYear(entity) : ''), 'muted small').style.margin = '0 0 8px';
+    addText(card, 'p', description).style.margin = '0 0 12px';
+    const link = addText(card, 'a', 'Apri scheda Wikidata');
+    link.href = 'https://www.wikidata.org/wiki/' + entity.id;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.style.color = 'var(--accent2)';
+    return { card, kind };
+  }
+  async function searchTitles() {
+    const query = input.value.trim();
+    if (!query) { status.textContent = 'Scrivi un titolo da cercare.'; input.focus(); return; }
+    button.disabled = true;
+    status.textContent = 'Ricerca in corso…';
+    results.replaceChildren();
+    try {
+      const searchUrl = new URL(API);
+      searchUrl.search = new URLSearchParams({
+        action: 'wbsearchentities', search: query, language: 'it', uselang: 'it',
+        type: 'item', limit: '20', format: 'json', origin: '*'
+      }).toString();
+      const searchResponse = await fetch(searchUrl.toString());
+      if (!searchResponse.ok) throw new Error('Il servizio di ricerca non risponde.');
+      const searchData = await searchResponse.json();
+      const ids = (searchData.search || []).map(item => item.id).filter(Boolean);
+      if (!ids.length) { status.textContent = 'Nessun risultato trovato.'; return; }
+
+      const detailUrl = new URL(API);
+      detailUrl.search = new URLSearchParams({
+        action: 'wbgetentities', ids: ids.join('|'), props: 'labels|descriptions|claims',
+        languages: 'it|en', format: 'json', origin: '*'
+      }).toString();
+      const detailResponse = await fetch(detailUrl.toString());
+      if (!detailResponse.ok) throw new Error('Impossibile caricare le schede dei titoli.');
+      const detailData = await detailResponse.json();
+      const selectedKind = filter.value;
+      let count = 0;
+      for (const id of ids) {
+        const entity = detailData.entities?.[id];
+        if (!entity || entity.missing !== undefined) continue;
+        const kind = getKind(entity);
+        if (selectedKind !== 'all' && kind !== selectedKind) continue;
+        results.appendChild(createCard(entity).card);
+        count++;
+      }
+      status.textContent = count
+        ? count + ' risultati mostrati. La classificazione e i metadati possono essere incompleti.'
+        : 'Nessun risultato per questo filtro. Prova “Film e serie TV”.';
+    } catch (error) {
+      status.textContent = 'Ricerca non riuscita: ' + (error?.message || 'errore sconosciuto') + '. Riprova tra poco.';
+    } finally { button.disabled = false; }
+  }
+  button.addEventListener('click', searchTitles);
+  input.addEventListener('keydown', event => { if (event.key === 'Enter') searchTitles(); });
+})();
 
 </script>
 </body>
