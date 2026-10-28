@@ -22,6 +22,16 @@ button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--li
   <span class="pill">● Player web · Preferiti salvati</span>
 </header>
 
+<section class="panel" id="sourcesPanel" style="margin:16px 0">
+  <h2>🌐 Catalogo delle fonti</h2>
+  <p>Carica l'elenco delle fonti configurate in Pastebin.</p>
+  <div class="row">
+    <button class="primary" id="loadSources">↻ Carica fonti</button>
+    <span id="sourcesStatus" role="status">Fonti non ancora caricate</span>
+  </div>
+  <div id="sourcesList" style="margin-top:14px"></div>
+</section>
+
 <div class="grid">
 <section class="panel">
   <h2>📚 Le mie playlist</h2>
