@@ -195,7 +195,7 @@
           <input id="query" type="search"
             placeholder="Es. Interstellar, documentari, musica..."
             aria-label="Cosa vuoi cercare?" required>
-          <button type="submit">Cerca</button>
+          <button type="button" id="searchButton">Cerca</button>
         </div>
       </form>
 
@@ -351,11 +351,24 @@
       });
     }
 
-    $("searchForm").addEventListener("submit", event => {
-      event.preventDefault();
-      lastQuery = $("query").value.trim();
-      renderResults(lastQuery);
-    });
+    function runSearch() {
+  lastQuery = $("query").value.trim();
+
+  if (!lastQuery) {
+    $("searchStatus").textContent = "Inserisci un termine da cercare.";
+    $("query").focus();
+    return;
+  }
+
+  renderResults(lastQuery);
+}
+
+$("searchButton").addEventListener("click", runSearch);
+
+$("searchForm").addEventListener("submit", event => {
+  event.preventDefault();
+  runSearch();
+});
 
     document.querySelectorAll("[data-mode]").forEach(button => {
       button.addEventListener("click", () => {
